@@ -1,0 +1,30 @@
+name: Complex
+version: '1.0.0-SNAPSHOT'
+main: org.gsn.complex.Complex
+api-version: '1.21'
+authors: [ 猫导CatirD ]
+
+dependencies:
+  server:
+    AttributePlus:
+      load: BEFORE
+      required: false
+    Sertraline:
+      load: BEFORE
+      required: false
+    Baikiruto:
+      load: BEFORE
+      required: false
+    MMOItems:
+      load: BEFORE
+      required: false
+    NeigeItems:
+      load: BEFORE
+      required: false
+    SX-Item:
+      load: BEFORE
+      required: false
+    Zaphkiel:
+      load: BEFORE
+      required: false
+
