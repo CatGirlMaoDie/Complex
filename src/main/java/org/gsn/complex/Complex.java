@@ -16,6 +16,9 @@ import org.gsn.complex.compat.SertralineCompat;
 import org.gsn.complex.compat.SertralineStatMapping;
 import org.gsn.complex.compat.SXItemCompat;
 import org.gsn.complex.compat.ZaphkielCompat;
+import org.gsn.complex.compat.FoliaSchedulerAdapter;
+import org.gsn.complex.compat.LegacySchedulerAdapter;
+import org.gsn.complex.compat.SchedulerAdapter;
 import org.gsn.complex.gui.EquipmentGUI;
 import org.gsn.complex.gui.GUIConfig;
 import org.gsn.complex.listener.InventoryListener;
@@ -40,6 +43,7 @@ public final class Complex extends JavaPlugin {
     private ZaphkielCompat               zaphkielCompat;
     private PlayerManager                playerManager;
     private GUIConfig                    guiConfig;
+    private SchedulerAdapter             schedulerAdapter;
 
     @Override
     public void onEnable() {
@@ -73,8 +77,19 @@ public final class Complex extends JavaPlugin {
         zaphkielCompat = new ZaphkielCompat();
         zaphkielCompat.init(getLogger());
 
+        // Decide scheduler implementation based on environment (Folia vs legacy)
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
+            schedulerAdapter = new FoliaSchedulerAdapter(this);
+            getLogger().info("[Complex] Detected Folia scheduler API, using FoliaSchedulerAdapter.");
+        } catch (ClassNotFoundException e) {
+            schedulerAdapter = new LegacySchedulerAdapter(this);
+            getLogger().info("[Complex] Folia scheduler API not found, using LegacySchedulerAdapter.");
+        }
+
         playerManager = new PlayerManager(this, atPlusCompat, sertralineCompat, baikirutoCompat,
                 mmoItemsCompat, neigeItemsCompat, sxItemCompat, zaphkielCompat);
+
 
         getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this),    this);
@@ -120,4 +135,5 @@ public final class Complex extends JavaPlugin {
     public SXItemCompat                 getSXItemCompat()          { return sxItemCompat; }
     public ZaphkielCompat               getZaphkielCompat()        { return zaphkielCompat; }
     public GUIConfig                    getGUIConfig()             { return guiConfig; }
+    public SchedulerAdapter             getSchedulerAdapter()      { return schedulerAdapter; }
 }
