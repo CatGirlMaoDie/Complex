@@ -25,6 +25,6 @@ public class FoliaSchedulerAdapter implements SchedulerAdapter {
                 return;
             }
             task.run();
-        }, delayTicks);
+        }, null, delayTicks);
     }
 }
