@@ -1,0 +1,413 @@
+gui:
+  # GUI 标题，支持 & 颜色代码
+  title: "&8【&6RPG 装备&8】"
+  # GUI 行数（1-6）
+  rows: 6
+
+  # GUI 布局：每行恰好 9 个字符，字符与下方 characters 节点的 key 对应
+  # 未在 characters 中定义的字符将显示为填充物（filler）
+  # 布局示意（默认）：
+  #   B = 填充物（灰色玻璃板）
+  #   H = 头盔   C = 胸甲   R = 戒指I
+  #   O = 副手   L = 护腿   r = 戒指II
+  #   b = 腰带   T = 靴子   N = 项链
+  #
+  # 武器槽（CustomSlot.WEAPON）默认不启用，需要时可自行添加字符并在
+  # characters 节点下配置，例如：
+  #   W:
+  #     slot: WEAPON
+  #     material: IRON_SWORD
+  #     name: "&8[&7武器&8]"
+  #     lore:
+  #       - "&8将装备拖入此格"
+  layout:
+    - "BBBBBBBBB"
+    - "BBHBBBBBB"
+    - "BBCRBBBBB"
+    - "BOLrBBBBB"
+    - "BbTNBBBBB"
+    - "BBBBBBBBB"
+
+  characters:
+    # ── 填充物 ──────────────────────────────────────────────────────────────
+    B:
+      filler: true
+      material: GRAY_STAINED_GLASS_PANE
+      name: " "
+
+    # ── 装备槽 ──────────────────────────────────────────────────────────────
+    # allowed-stats: 填写需要生效的属性 ID 列表；留空或省略则所有属性均生效。
+    #
+    # 全部可用属性 ID（大小写不敏感）：
+    #   PHYSICAL_DAMAGE       物理伤害
+    #   MAGICAL_DAMAGE        魔法伤害
+    #   MAX_HEALTH            最大生命值
+    #   PHYSICAL_DEFENSE      物理防御
+    #   MAGICAL_DEFENSE       魔法防御
+    #   MOVEMENT_SPEED        移动速度
+    #   ATTACK_SPEED          攻击速度
+    #   ATTACK_DAMAGE         攻击伤害
+    #   CRITICAL_STRIKE_CHANCE  暴击率
+    #   CRITICAL_STRIKE_POWER   暴击伤害
+    #   ARMOR                 护甲
+    #   ARMOR_TOUGHNESS       护甲韧性
+
+    H:
+      slot: HELMET
+      material: IRON_HELMET
+      name: "&8[&7头盔&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats: []   # 留空 = 全部生效（示例：只允许护甲相关）
+      # allowed-stats:
+      #   - MAX_HEALTH
+      #   - ARMOR
+      #   - ARMOR_TOUGHNESS
+      #   - PHYSICAL_DEFENSE
+      #   - MAGICAL_DEFENSE
+
+    C:
+      slot: CHESTPLATE
+      material: IRON_CHESTPLATE
+      name: "&8[&7胸甲&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats:
+      #   - MAX_HEALTH
+      #   - ARMOR
+      #   - ARMOR_TOUGHNESS
+      #   - PHYSICAL_DEFENSE
+      #   - MAGICAL_DEFENSE
+
+    R:
+      slot: RING_1
+      material: GOLD_NUGGET
+      name: "&8[&7戒指 I&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats: []   # 戒指通常允许所有属性
+
+    O:
+      slot: OFFHAND
+      material: SHIELD
+      name: "&8[&7副手&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats:
+      #   - ARMOR
+      #   - ARMOR_TOUGHNESS
+      #   - PHYSICAL_DEFENSE
+      #   - MAGICAL_DEFENSE
+
+    L:
+      slot: LEGGINGS
+      material: IRON_LEGGINGS
+      name: "&8[&7护腿&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats:
+      #   - MAX_HEALTH
+      #   - ARMOR
+      #   - ARMOR_TOUGHNESS
+      #   - PHYSICAL_DEFENSE
+      #   - MAGICAL_DEFENSE
+
+    # 小写 r = 戒指II（与大写 R 的戒指I 区分）
+    r:
+      slot: RING_2
+      material: GOLD_NUGGET
+      name: "&8[&7戒指 II&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats: []   # 戒指通常允许所有属性
+
+    # 小写 b = 腰带（与大写 B 的填充物区分）
+    b:
+      slot: BELT
+      material: LEATHER
+      name: "&8[&7腰带&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats:
+      #   - MAX_HEALTH
+      #   - ARMOR
+      #   - MOVEMENT_SPEED
+
+    T:
+      slot: BOOTS
+      material: IRON_BOOTS
+      name: "&8[&7靴子&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats:
+      #   - MAX_HEALTH
+      #   - ARMOR
+      #   - ARMOR_TOUGHNESS
+      #   - MOVEMENT_SPEED
+      #   - PHYSICAL_DEFENSE
+      #   - MAGICAL_DEFENSE
+
+    N:
+      slot: NECKLACE
+      material: EMERALD
+      name: "&8[&7项链&8]"
+      lore:
+        - "&8将装备拖入此格"
+      # allowed-stats: []   # 项链通常允许所有属性
+
+# ── MMOItems 物品库属性读取 ──────────────────────────────────────────────────
+# 当 MMOItems 已安装时，Complex 会先尝试通过以下映射从物品的 NBT 中直接读取
+# MMOItems 属性数值；若路径不存在或值为 0，则回退到解析 lore 文本。
+#
+# mmo-stat: MMOItems 中 ItemStat 的 ID（大小写不敏感）
+#           常用值：ATTACK_DAMAGE / ATTACK_SPEED / CRITICAL_STRIKE_CHANCE /
+#                  CRITICAL_STRIKE_POWER / DEFENSE / MAX_HEALTH /
+#                  MOVEMENT_SPEED / ARMOR / ARMOR_TOUGHNESS
+#
+# stat: Complex 属性 ID（与 allowed-stats 中的 ID 一致，大小写不敏感）
+#       可用值：PHYSICAL_DAMAGE / MAGICAL_DAMAGE / MAX_HEALTH /
+#              PHYSICAL_DEFENSE / MAGICAL_DEFENSE / MOVEMENT_SPEED /
+#              ATTACK_SPEED / ATTACK_DAMAGE / CRITICAL_STRIKE_CHANCE /
+#              CRITICAL_STRIKE_POWER / ARMOR / ARMOR_TOUGHNESS
+#
+# type: FLAT（固定加成，默认）或 RELATIVE（百分比加成）
+#
+# 默认留空：不启用路径读取，仅依赖 lore 文本解析
+mmoitems:
+  stat-mapping: []
+  # 示例（取消注释并替换为实际 mmo-stat ID 即可）：
+  # stat-mapping:
+  #   - mmo-stat: "ATTACK_DAMAGE"
+  #     stat: PHYSICAL_DAMAGE
+  #     type: FLAT
+  #   - mmo-stat: "MAGIC_DAMAGE"
+  #     stat: MAGICAL_DAMAGE
+  #     type: FLAT
+  #   - mmo-stat: "MAX_HEALTH"
+  #     stat: MAX_HEALTH
+  #     type: FLAT
+  #   - mmo-stat: "DEFENSE"
+  #     stat: PHYSICAL_DEFENSE
+  #     type: FLAT
+  #   - mmo-stat: "MOVEMENT_SPEED"
+  #     stat: MOVEMENT_SPEED
+  #     type: FLAT
+  #   - mmo-stat: "ATTACK_SPEED"
+  #     stat: ATTACK_SPEED
+  #     type: FLAT
+  #   - mmo-stat: "CRITICAL_STRIKE_CHANCE"
+  #     stat: CRITICAL_STRIKE_CHANCE
+  #     type: RELATIVE
+  #   - mmo-stat: "CRITICAL_STRIKE_POWER"
+  #     stat: CRITICAL_STRIKE_POWER
+  #     type: RELATIVE
+  #   - mmo-stat: "ARMOR"
+  #     stat: ARMOR
+  #     type: FLAT
+  #   - mmo-stat: "ARMOR_TOUGHNESS"
+  #     stat: ARMOR_TOUGHNESS
+  #     type: FLAT
+
+# ── Baikiruto 物品库属性读取 ─────────────────────────────────────────────────
+# 当 Baikiruto 已安装时，Complex 会先尝试通过以下路径从物品的 data Map 中读取
+# 属性数值；若路径不存在，则回退到解析 rebuild() 后的 lore 文本。
+#
+# path: BaikirutoAPI.getItemData(item) 返回的 Map 的 key（支持点分隔嵌套路径）
+#       例如物品定义了 data.atk: 100，则填写 "atk"
+#       嵌套示例：data.stats.atk → 填写 "stats.atk"
+#
+# stat: Complex 属性 ID（与 allowed-stats 中的 ID 一致，大小写不敏感）
+#       可用值：PHYSICAL_DAMAGE / MAGICAL_DAMAGE / MAX_HEALTH /
+#              PHYSICAL_DEFENSE / MAGICAL_DEFENSE / MOVEMENT_SPEED /
+#              ATTACK_SPEED / ATTACK_DAMAGE / CRITICAL_STRIKE_CHANCE /
+#              CRITICAL_STRIKE_POWER / ARMOR / ARMOR_TOUGHNESS
+#
+# type: FLAT（固定加成，默认）或 RELATIVE（百分比加成）
+#
+# 默认留空：不启用路径读取，仅依赖 lore 文本解析
+baikiruto:
+  stat-mapping: []
+  # 示例（取消注释并替换为实际路径即可）：
+  # stat-mapping:
+  #   - path: "physical_damage"
+  #     stat: PHYSICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "magical_damage"
+  #     stat: MAGICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "max_health"
+  #     stat: MAX_HEALTH
+  #     type: FLAT
+  #   - path: "physical_defense"
+  #     stat: PHYSICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "magical_defense"
+  #     stat: MAGICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "movement_speed"
+  #     stat: MOVEMENT_SPEED
+  #     type: FLAT
+  #   - path: "attack_speed"
+  #     stat: ATTACK_SPEED
+  #     type: FLAT
+  #   - path: "attack_damage"
+  #     stat: ATTACK_DAMAGE
+  #     type: FLAT
+  #   - path: "critical_chance"
+  #     stat: CRITICAL_STRIKE_CHANCE
+  #     type: RELATIVE
+  #   - path: "critical_power"
+  #     stat: CRITICAL_STRIKE_POWER
+  #     type: RELATIVE
+  #   - path: "armor"
+  #     stat: ARMOR
+  #     type: FLAT
+  #   - path: "armor_toughness"
+  #     stat: ARMOR_TOUGHNESS
+  #     type: FLAT
+# 当 Sertraline 已安装时，Complex 会先尝试通过以下路径直接从物品定义的 data
+# 节点中读取属性数值；若路径不存在，则回退到解析 rebuild() 后的 lore 文本。
+#
+# path: ModernSItem.getDeepData() 接受的路径，格式为 "section:key" 或 "section:key.subkey"
+#       其中 section 是物品 YAML 顶层节点名，key 是节点内的字段名（支持点分隔嵌套）
+#       例如物品 YAML 定义了：
+#         data:
+#           atk: 100
+#           stats:
+#             crit: 15
+#       则分别填写 "data:atk" 和 "data:stats.crit"
+#       常用 section：data / sertraline / custom_data / minecraft
+#
+# stat: Complex 属性 ID（与 allowed-stats 中的 ID 一致，大小写不敏感）
+#       可用值：PHYSICAL_DAMAGE / MAGICAL_DAMAGE / MAX_HEALTH /
+#              PHYSICAL_DEFENSE / MAGICAL_DEFENSE / MOVEMENT_SPEED /
+#              ATTACK_SPEED / ATTACK_DAMAGE / CRITICAL_STRIKE_CHANCE /
+#              CRITICAL_STRIKE_POWER / ARMOR / ARMOR_TOUGHNESS
+#
+# type: FLAT（固定加成，默认）或 RELATIVE（百分比加成，不需要在值后加 %）
+#
+# 默认留空：不启用路径读取，仅依赖 lore 文本解析（适合 lore 格式与插件正则匹配的情况）
+sertraline:
+  stat-mapping: []
+  # 示例（取消注释并替换为实际路径即可）：
+  # stat-mapping:
+  #   - path: "data:physical_damage"
+  #     stat: PHYSICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "data:magical_damage"
+  #     stat: MAGICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "data:max_health"
+  #     stat: MAX_HEALTH
+  #     type: FLAT
+  #   - path: "data:max_health_percent"
+  #     stat: MAX_HEALTH
+  #     type: RELATIVE
+  #   - path: "data:physical_defense"
+  #     stat: PHYSICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "data:magical_defense"
+  #     stat: MAGICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "data:movement_speed"
+  #     stat: MOVEMENT_SPEED
+  #     type: FLAT
+  #   - path: "data:attack_speed"
+  #     stat: ATTACK_SPEED
+  #     type: FLAT
+  #   - path: "data:attack_damage"
+  #     stat: ATTACK_DAMAGE
+  #     type: FLAT
+  #   - path: "data:critical_chance"
+  #     stat: CRITICAL_STRIKE_CHANCE
+  #     type: RELATIVE
+  #   - path: "data:critical_power"
+  #     stat: CRITICAL_STRIKE_POWER
+  #     type: RELATIVE
+  #   - path: "data:armor"
+  #     stat: ARMOR
+  #     type: FLAT
+  #   - path: "data:armor_toughness"
+  #     stat: ARMOR_TOUGHNESS
+  #     type: FLAT
+
+# ── NeigeItems 物品库属性读取 ────────────────────────────────────────────────
+# 当 NeigeItems 已安装时，Complex 会先尝试通过以下键从物品 data 节点中读取
+# 属性数值；若键不存在，则回退到解析 rebuild() 后的 lore 文本。
+#
+# path: ItemInfo.getData() 返回的 HashMap 的 key，对应物品 YAML 中 data 节点
+#       下定义的字段名（不支持嵌套，仅顶层 key）
+#       例如物品定义了：
+#         data:
+#           atk: 100
+#           crit: 15
+#       则分别填写 "atk" 和 "crit"
+#
+# stat: Complex 属性 ID（与 allowed-stats 中的 ID 一致，大小写不敏感）
+#       可用值：PHYSICAL_DAMAGE / MAGICAL_DAMAGE / MAX_HEALTH /
+#              PHYSICAL_DEFENSE / MAGICAL_DEFENSE / MOVEMENT_SPEED /
+#              ATTACK_SPEED / ATTACK_DAMAGE / CRITICAL_STRIKE_CHANCE /
+#              CRITICAL_STRIKE_POWER / ARMOR / ARMOR_TOUGHNESS
+#
+# type: FLAT（固定加成，默认）或 RELATIVE（百分比加成）
+#
+# 默认留空：不启用路径读取，仅依赖 lore 文本解析
+neigeitems:
+  stat-mapping: []
+  # 示例（取消注释并替换为实际 data 键即可）：
+  # stat-mapping:
+  #   - path: "atk"
+  #     stat: PHYSICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "matk"
+  #     stat: MAGICAL_DAMAGE
+  #     type: FLAT
+  #   - path: "hp"
+  #     stat: MAX_HEALTH
+  #     type: FLAT
+  #   - path: "def"
+  #     stat: PHYSICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "mdef"
+  #     stat: MAGICAL_DEFENSE
+  #     type: FLAT
+  #   - path: "spd"
+  #     stat: MOVEMENT_SPEED
+  #     type: FLAT
+  #   - path: "aspd"
+  #     stat: ATTACK_SPEED
+  #     type: FLAT
+  #   - path: "crit"
+  #     stat: CRITICAL_STRIKE_CHANCE
+  #     type: RELATIVE
+  #   - path: "crit_dmg"
+  #     stat: CRITICAL_STRIKE_POWER
+  #     type: RELATIVE
+  #   - path: "armor"
+  #     stat: ARMOR
+  #     type: FLAT
+  #   - path: "tough"
+  #     stat: ARMOR_TOUGHNESS
+  #     type: FLAT
+
+# ── SX-Item 物品库属性读取 ───────────────────────────────────────────────────
+# 当 SX-Item 已安装时，Complex 通过调用 updateItem() 刷新物品 lore，
+# 然后解析刷新后的 lore 文本来读取属性数值。
+# SX-Item 无直接数据 Map，故不支持 stat-mapping，属性读取完全依赖 lore 格式。
+# 确保 SX-Item 物品的 lore 含有如下格式之一，即可自动识别：
+#   +10 Physical Damage
+#   +5% Critical Strike Chance
+#   +100 物理伤害
+sxitem:
+  # 此节点保留以供将来扩展，当前无配置项
+
+# ── Zaphkiel 物品库属性读取 ──────────────────────────────────────────────────
+# 当 Zaphkiel 已安装时，Complex 通过调用 rebuildToItemStack() 刷新物品 lore，
+# 然后解析刷新后的 lore 文本来读取属性数值。
+# 属性读取完全依赖 lore 格式（同 SX-Item）。
+#
+# 注意：需要将 Zaphkiel-Plus 构建输出的 JAR 放入 libs/ 目录后重新编译。
+#       源码位于 libs/Zaphkiel-Plus-main，执行 gradle build 后将
+#       plugin/build/libs/*.jar 复制到 libs/ 即可。
+zaphkiel:
+  # 此节点保留以供将来扩展，当前无配置项
